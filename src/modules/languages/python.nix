@@ -212,7 +212,7 @@ in
       # Make poetry create the local virtualenv when it does not exist.
       POETRY_VIRTUALENVS_CREATE = "true";
       # Make poetry stop accessing any other virtualenvs in $HOME.
-      POETRY_VIRTUALENVS_PATH = "/var/empty";
+      POETRY_VIRTUALENVS_PATH = "$PWD/.venv";
     };
 
     enterShell = lib.concatStringsSep "\n" ([
