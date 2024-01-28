@@ -64,7 +64,7 @@ let
       # Only run it when the "poetry.lock" file or python interpreter has changed.
       # We do this by storing the interpreter path and a hash of "poetry.lock" in venv.
       local ACTUAL_POETRY_CHECKSUM="${cfg.package.interpreter}:$(${pkgs.nix}/bin/nix-hash --type sha256 ${cfg.poetry.install.directory}/pyproject.toml):$(${pkgs.nix}/bin/nix-hash --type sha256 ${cfg.poetry.install.directory}/poetry.lock):''${POETRY_INSTALL_COMMAND[@]}"
-      local POETRY_CHECKSUM_FILE="$DEVENV_ROOT"/.venv/poetry.lock.checksum
+      local POETRY_CHECKSUM_FILE="$DEVENV_ROOT"/${cfg.poetry.install.directory}/.venv/poetry.lock.checksum
       if [ -f "$POETRY_CHECKSUM_FILE" ]
       then
         read -r EXPECTED_POETRY_CHECKSUM < "$POETRY_CHECKSUM_FILE"
@@ -92,7 +92,7 @@ let
         _devenv-poetry-install
       ''}
       ${lib.optionalString cfg.poetry.activate.enable ''
-        source "$DEVENV_ROOT"/.venv/bin/activate
+        source "$DEVENV_ROOT"/${cfg.poetry.install.directory}/.venv/bin/activate
       ''}
     fi
   '';
@@ -212,7 +212,7 @@ in
       # Make poetry create the local virtualenv when it does not exist.
       POETRY_VIRTUALENVS_CREATE = "true";
       # Make poetry stop accessing any other virtualenvs in $HOME.
-      POETRY_VIRTUALENVS_PATH = "$PWD/.venv";
+      POETRY_VIRTUALENVS_PATH = "/var/empty";
     };
 
     enterShell = lib.concatStringsSep "\n" ([
